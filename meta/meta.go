@@ -62,7 +62,7 @@ func GeneralOptionsUsage() string {
 	general := `
   -client-key=path        Path to an unencrypted PEM encoded private key
                           matching the client certificate from -client-cert.
-                          Overrides the VAULT_CLIENT_KEY environment variable
+                          Overrides the GITX_CLIENT_KEY environment variable
                           if set.
 `
 	return general
