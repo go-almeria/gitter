@@ -39,7 +39,7 @@ func RunCustom(args []string, commands map[string]cli.CommandFactory) int {
 	cli := &cli.CLI{
 		Args:         args,
 		Commands:     commands,
-		Name:         "gitter",
+		Name:         "gitx",
 		Autocomplete: true,
 		HelpFunc:     cli.FilteredHelpFunc(commandsInclude, HelpFunc),
 	}

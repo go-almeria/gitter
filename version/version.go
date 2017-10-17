@@ -64,10 +64,10 @@ func (c *VersionInfo) FullVersionNumber(rev bool) string {
 	var versionString bytes.Buffer
 
 	if Version == "unknown" && VersionPrerelease == "unknown" {
-		return "Gitter (version unknown)"
+		return "Gitx (version unknown)"
 	}
 
-	fmt.Fprintf(&versionString, "Gitter v%s", c.Version)
+	fmt.Fprintf(&versionString, "Gitx v%s", c.Version)
 	if c.VersionPrerelease != "" {
 		fmt.Fprintf(&versionString, "-%s", c.VersionPrerelease)
 	}

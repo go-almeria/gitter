@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/go-almeria/gitter/cli"
+	"github.com/go-almeria/gitx/cli"
 )
 
 func main() {

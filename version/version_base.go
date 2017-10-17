@@ -1,4 +1,4 @@
-// +build gitter
+// +build gitx
 
 package version
 

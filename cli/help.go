@@ -9,7 +9,7 @@ import (
 	"github.com/mitchellh/cli"
 )
 
-// HelpFunc is a cli.HelpFunc that can is used to output the help for Gitter.
+// HelpFunc is a cli.HelpFunc that can is used to output the help for Gitx.
 func HelpFunc(commands map[string]cli.CommandFactory) string {
 	commonNames := map[string]struct{}{
 		"test": struct{}{},
@@ -32,7 +32,7 @@ func HelpFunc(commands map[string]cli.CommandFactory) string {
 	}
 
 	var buf bytes.Buffer
-	buf.WriteString("usage: gitter [-version] [-help] <command> [args]\n\n")
+	buf.WriteString("usage: gitx [-version] [-help] <command> [args]\n\n")
 	buf.WriteString("Common commands:\n")
 	buf.WriteString(listCommands(commonCommands, maxKeyLen))
 	buf.WriteString("\nAll other commands:\n")

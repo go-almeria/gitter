@@ -1,7 +1,7 @@
 package command
 
 import (
-	"github.com/go-almeria/gitter/version"
+	"github.com/go-almeria/gitx/version"
 	"github.com/mitchellh/cli"
 )
 
@@ -22,5 +22,5 @@ func (c *VersionCommand) Run(_ []string) int {
 }
 
 func (c *VersionCommand) Synopsis() string {
-	return "Prints the Gitter version"
+	return "Prints the Gitx version"
 }

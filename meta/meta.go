@@ -3,7 +3,7 @@ package meta
 import "github.com/mitchellh/cli"
 
 // Meta contains the meta-options and functionality that nearly every
-// Gitter command inherits.
+// Gitx command inherits.
 type Meta struct {
 	Ui cli.Ui
 

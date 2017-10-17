@@ -3,14 +3,14 @@ package cli
 import (
 	"os"
 
-	"github.com/go-almeria/gitter/command"
-	"github.com/go-almeria/gitter/meta"
-	"github.com/go-almeria/gitter/version"
+	"github.com/go-almeria/gitx/command"
+	"github.com/go-almeria/gitx/meta"
+	"github.com/go-almeria/gitx/version"
 
 	"github.com/mitchellh/cli"
 )
 
-// Commands returns the mapping of CLI commands for Gitter. The meta
+// Commands returns the mapping of CLI commands for Gitx. The meta
 // parameter lets you set meta options for all commands.
 func Commands(metaPtr *meta.Meta) map[string]cli.CommandFactory {
 
