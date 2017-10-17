@@ -9,13 +9,18 @@ import (
 )
 
 func Run(args []string) int {
-
 	return RunCustom(args, Commands(nil))
 }
 
 func RunCustom(args []string, commands map[string]cli.CommandFactory) int {
+	_, err := exec.LookPath("git")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Git executable not reachable: %s\n", err.Error())
+		return 1
+	}
+
 	cmd := exec.Command("git", "--version")
-	_, err := cmd.Output()
+	_, err = cmd.Output()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Git executable not usable: %s\n", err.Error())
 		return 1
@@ -23,7 +28,6 @@ func RunCustom(args []string, commands map[string]cli.CommandFactory) int {
 
 	// Get the command line args. We shortcut "--version" and "-v" to
 	// just show the version.
-
 	for _, arg := range args {
 		if arg == "-v" || arg == "-version" || arg == "--version" {
 			newArgs := make([]string, len(args)+1)
