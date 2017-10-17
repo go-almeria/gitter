@@ -26,6 +26,11 @@ func Commands(metaPtr *meta.Meta) map[string]cli.CommandFactory {
 	}
 
 	return map[string]cli.CommandFactory{
+		"count": func() (cli.Command, error) {
+			return &command.CountCommand{
+				Meta: *metaPtr,
+			}, nil
+		},
 		"version": func() (cli.Command, error) {
 			versionInfo := version.GetVersion()
 
