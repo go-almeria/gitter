@@ -3,15 +3,24 @@ package cli
 import (
 	"fmt"
 	"os"
+	"os/exec"
 
 	"github.com/mitchellh/cli"
 )
 
 func Run(args []string) int {
+
 	return RunCustom(args, Commands(nil))
 }
 
 func RunCustom(args []string, commands map[string]cli.CommandFactory) int {
+	cmd := exec.Command("git", "--version")
+	_, err := cmd.Output()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Git executable not usable: %s\n", err.Error())
+		return 1
+	}
+
 	// Get the command line args. We shortcut "--version" and "-v" to
 	// just show the version.
 
