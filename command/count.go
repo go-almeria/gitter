@@ -2,6 +2,7 @@ package command
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/go-almeria/gitx/api"
@@ -32,6 +33,11 @@ func (c *CountCommand) Run(args []string) int {
 
 	g := *api.NewGit()
 	g.Args = strings.Fields("log")
+
+	g.Exec()
+	lines, errc := g.Stream(os.Stdout)
+	fmt.Println(lines, errc)
+	g.Wait()
 
 	return 0
 }
