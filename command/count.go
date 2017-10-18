@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/go-almeria/gitx/api"
 	"github.com/go-almeria/gitx/meta"
 )
 
@@ -28,6 +29,9 @@ func (c *CountCommand) Run(args []string) int {
 		c.Ui.Error(fmt.Sprintf("\ncount expects at most one argument"))
 		return 1
 	}
+
+	var g api.Git = *api.NewGit()
+	g.Args = strings.Fields("log")
 
 	return 0
 }
