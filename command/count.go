@@ -1,6 +1,7 @@
 package command
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/go-almeria/gitx/meta"
@@ -18,6 +19,13 @@ func (c *CountCommand) Run(args []string) int {
 	flags.BoolVar(&all, "all", false, "")
 	flags.Usage = func() { c.Ui.Error(c.Help()) }
 	if err := flags.Parse(args); err != nil {
+		return 1
+	}
+
+	args = flags.Args()
+	if len(args) > 1 {
+		flags.Usage()
+		c.Ui.Error(fmt.Sprintf("\ncount expects at most one argument"))
 		return 1
 	}
 
