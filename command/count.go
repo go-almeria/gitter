@@ -37,12 +37,12 @@ func (c *CountCommand) Run(args []string) int {
 }
 
 func (c *CountCommand) Synopsis() string {
-	return "Outputs commit count"
+	return "Outputs commit counts"
 }
 
 func (c *CountCommand) Help() string {
 	helpText := `
-Usage: gitx count [options]
+Usage: gitx count [--all]
 `
 	return strings.TrimSpace(helpText)
 }
