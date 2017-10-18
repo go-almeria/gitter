@@ -12,11 +12,15 @@ type CountCommand struct {
 }
 
 func (c *CountCommand) Run(args []string) int {
+	var all bool
+
 	flags := c.Meta.FlagSet("count", meta.FlagSetDefault)
+	flags.BoolVar(&all, "all", false, "")
 	flags.Usage = func() { c.Ui.Error(c.Help()) }
 	if err := flags.Parse(args); err != nil {
 		return 1
 	}
+
 	return 0
 }
 
