@@ -30,7 +30,7 @@ func (c *CountCommand) Run(args []string) int {
 		return 1
 	}
 
-	var g api.Git = *api.NewGit()
+	g := *api.NewGit()
 	g.Args = strings.Fields("log")
 
 	return 0
