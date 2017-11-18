@@ -30,8 +30,11 @@ func (c *CountCommand) Run(args []string) int {
 		return 1
 	}
 
-	g := *api.NewGit("shortlog HEAD -n -s", true)
-	g.Exec()
+	g := *api.NewGit("shortlog HEAD -n -s")
+	g.Run()
+
+	outStr, errStr := string(g.Out.Bytes()), string(g.Err.Bytes())
+	fmt.Printf("out:\n%s\nerr:\n%s\n", outStr, errStr)
 	return 0
 }
 

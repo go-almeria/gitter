@@ -2,6 +2,7 @@ package api
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"io"
 	"os"
@@ -16,22 +17,23 @@ type Git struct {
 	Path      string
 	Env       []string
 	Args      []string
-	Stream    bool
 	Success   bool
 	Pid       int
 	Duration  int
 	Errors    []string
 	Log       string
 	Overwrite bool
+	Out       bytes.Buffer
 	OutPipe   io.ReadCloser
+	Err       bytes.Buffer
 	ErrPipe   io.ReadCloser
 }
 
-func NewGit(args string, stream bool) *Git {
-	return &Git{GitExec: "git", Args: strings.Fields(args), Stream: stream}
+func NewGit(args string) *Git {
+	return &Git{GitExec: "git", Args: strings.Fields(args)}
 }
 
-func (g *Git) Streamer(l *os.File) (<-chan string, <-chan error) {
+func (g *Git) Stream(l *os.File) (<-chan string, <-chan error) {
 
 	lines := make(chan string)
 	errc := make(chan error, 1)
@@ -82,16 +84,23 @@ func (g *Git) Reader(lines <-chan string, errc <-chan error) {
 
 }
 
-func (g *Git) Exec() error {
+func (g *Git) Streamer() error {
 	g.Cmd = exec.Command(g.GitExec, g.Args...)
 
-	if g.Stream {
-		g.OutPipe, _ = g.Cmd.StdoutPipe()
-		g.Cmd.Start()
-		g.Pid = g.Cmd.Process.Pid
-		g.Reader(g.Streamer(os.Stdout))
-		g.Cmd.Wait()
+	g.OutPipe, _ = g.Cmd.StdoutPipe()
+	err := g.Cmd.Start()
+	if err != nil {
+		return err
 	}
+	g.Pid = g.Cmd.Process.Pid
+	g.Reader(g.Stream(os.Stdout))
 
-	return nil
+	return g.Cmd.Wait()
+}
+
+func (g *Git) Run() error {
+	g.Cmd = exec.Command(g.GitExec, g.Args...)
+	g.Cmd.Stdout = &g.Out
+	g.Cmd.Stderr = &g.Err
+	return g.Cmd.Run()
 }
