@@ -16,6 +16,7 @@ type Git struct {
 	Path      string
 	Env       []string
 	Args      []string
+	Stream    bool
 	Success   bool
 	Pid       int
 	Duration  int
@@ -26,8 +27,8 @@ type Git struct {
 	ErrPipe   io.ReadCloser
 }
 
-func NewGit(args string) *Git {
-	return &Git{GitExec: "git", Args: strings.Fields(args)}
+func NewGit(args string, stream bool) *Git {
+	return &Git{GitExec: "git", Args: strings.Fields(args), Stream: stream}
 }
 
 func (g *Git) Streamer(l *os.File) (<-chan string, <-chan error) {
@@ -82,16 +83,15 @@ func (g *Git) Reader(lines <-chan string, errc <-chan error) {
 }
 
 func (g *Git) Exec() error {
-
 	g.Cmd = exec.Command(g.GitExec, g.Args...)
-	g.OutPipe, _ = g.Cmd.StdoutPipe()
 
-	g.Cmd.Start()
-	g.Pid = g.Cmd.Process.Pid
-	return nil
-}
+	if g.Stream {
+		g.OutPipe, _ = g.Cmd.StdoutPipe()
+		g.Cmd.Start()
+		g.Pid = g.Cmd.Process.Pid
+		g.Reader(g.Streamer(os.Stdout))
+		g.Cmd.Wait()
+	}
 
-func (g *Git) Wait() error {
-	g.Cmd.Wait()
 	return nil
 }

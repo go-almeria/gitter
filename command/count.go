@@ -2,7 +2,6 @@ package command
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/go-almeria/gitx/api"
@@ -31,11 +30,8 @@ func (c *CountCommand) Run(args []string) int {
 		return 1
 	}
 
-	g := *api.NewGit("shortlog HEAD -n -s")
+	g := *api.NewGit("shortlog HEAD -n -s", true)
 	g.Exec()
-	g.Reader(g.Streamer(os.Stdout))
-
-	g.Wait()
 	return 0
 }
 
