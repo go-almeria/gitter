@@ -29,8 +29,9 @@ type Git struct {
 	ErrPipe   io.ReadCloser
 }
 
-func NewGit(args string) *Git {
-	return &Git{GitExec: "git", Args: strings.Fields(args)}
+func NewGit(a string) *Git {
+	args := strings.Fields(a)
+	return &Git{GitExec: "git", Args: args, Cmd: exec.Command("git", args...)}
 }
 
 func (g *Git) Stream(l *os.File) (<-chan string, <-chan error) {
@@ -85,8 +86,6 @@ func (g *Git) Reader(lines <-chan string, errc <-chan error) {
 }
 
 func (g *Git) Streamer() error {
-	g.Cmd = exec.Command(g.GitExec, g.Args...)
-
 	g.OutPipe, _ = g.Cmd.StdoutPipe()
 	err := g.Cmd.Start()
 	if err != nil {
@@ -99,7 +98,6 @@ func (g *Git) Streamer() error {
 }
 
 func (g *Git) Run() error {
-	g.Cmd = exec.Command(g.GitExec, g.Args...)
 	g.Cmd.Stdout = &g.Out
 	g.Cmd.Stderr = &g.Err
 	return g.Cmd.Run()
