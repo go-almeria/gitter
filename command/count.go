@@ -33,17 +33,7 @@ func (c *CountCommand) Run(args []string) int {
 
 	g := *api.NewGit("shortlog HEAD -n -s")
 	g.Exec()
-	lines, errc := g.Stream(os.Stdout)
-	go func() {
-		for {
-			select {
-			case line := <-lines:
-				fmt.Println(line)
-			case <-errc:
-				return
-			}
-		}
-	}()
+	g.Reader(g.Streamer(os.Stdout))
 
 	g.Wait()
 	return 0

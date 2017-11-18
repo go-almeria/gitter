@@ -2,6 +2,7 @@ package api
 
 import (
 	"bufio"
+	"fmt"
 	"io"
 	"os"
 	"os/exec"
@@ -29,7 +30,7 @@ func NewGit(args string) *Git {
 	return &Git{GitExec: "git", Args: strings.Fields(args)}
 }
 
-func (g *Git) Stream(l *os.File) (<-chan string, <-chan error) {
+func (g *Git) Streamer(l *os.File) (<-chan string, <-chan error) {
 
 	lines := make(chan string)
 	errc := make(chan error, 1)
@@ -64,6 +65,20 @@ func (g *Git) Stream(l *os.File) (<-chan string, <-chan error) {
 	}()
 
 	return lines, errc
+}
+
+func (g *Git) Reader(lines <-chan string, errc <-chan error) {
+	go func() {
+		for {
+			select {
+			case line := <-lines:
+				fmt.Println(line)
+			case <-errc:
+				return
+			}
+		}
+	}()
+
 }
 
 func (g *Git) Exec() error {
