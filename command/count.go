@@ -1,7 +1,11 @@
 package command
 
 import (
+	"bufio"
 	"fmt"
+	"log"
+	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/go-almeria/gitx/api"
@@ -35,6 +39,25 @@ func (c *CountCommand) Run(args []string) int {
 		c.Ui.Error(fmt.Sprintf("%s", string(g.Err.Bytes())))
 		return 1
 	}
+
+	re := regexp.MustCompile(`(\d+)\s+(\S+.*)`)
+	scanner := bufio.NewScanner(&g.Out)
+
+	count := 0
+	for scanner.Scan() {
+		results := re.FindAllStringSubmatch(scanner.Text(), -1)
+		userCount, _ := strconv.Atoi(results[0][1])
+		count += userCount
+		user := results[0][2]
+		if all {
+			fmt.Printf("%s (%d)\n", user, userCount)
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		log.Fatal("--->", err)
+	}
+	fmt.Printf("\ntotal %d\n", count)
 
 	return 0
 }
