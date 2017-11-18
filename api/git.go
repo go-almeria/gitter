@@ -2,11 +2,11 @@ package api
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"os"
 	"os/exec"
 	"os/signal"
+	"strings"
 )
 
 type Git struct {
@@ -25,8 +25,8 @@ type Git struct {
 	ErrPipe   io.ReadCloser
 }
 
-func NewGit() *Git {
-	return &Git{GitExec: "git"}
+func NewGit(args string) *Git {
+	return &Git{GitExec: "git", Args: strings.Fields(args)}
 }
 
 func (g *Git) Stream(l *os.File) (<-chan string, <-chan error) {
@@ -50,12 +50,10 @@ func (g *Git) Stream(l *os.File) (<-chan string, <-chan error) {
 		errc <- func() error {
 			for {
 				if !scanner.Scan() {
-					fmt.Println("no mas")
 					err = io.EOF
 					break
 				}
 				line = scanner.Text()
-				fmt.Println(line)
 				select {
 				case lines <- line:
 				}
