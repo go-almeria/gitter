@@ -50,14 +50,14 @@ func (c *CountCommand) Run(args []string) int {
 		count += userCount
 		user := results[0][2]
 		if all {
-			fmt.Printf("%s (%d)\n", user, userCount)
+			c.Ui.Info(fmt.Sprintf("%s (%d)", user, userCount))
 		}
 	}
 
 	if err := scanner.Err(); err != nil {
 		log.Fatal("--->", err)
 	}
-	fmt.Printf("\ntotal %d\n", count)
+	c.Ui.Info(fmt.Sprintf("\ntotal %d", count))
 
 	return 0
 }
