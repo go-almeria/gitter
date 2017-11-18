@@ -11,6 +11,10 @@ import (
 	"strings"
 )
 
+const (
+	gitExec = "git"
+)
+
 type Git struct {
 	GitExec   string
 	Cmd       *exec.Cmd
@@ -31,7 +35,7 @@ type Git struct {
 
 func NewGit(a string) *Git {
 	args := strings.Fields(a)
-	return &Git{GitExec: "git", Args: args, Cmd: exec.Command("git", args...)}
+	return &Git{GitExec: gitExec, Args: args, Cmd: exec.Command("git", args...)}
 }
 
 func (g *Git) Stream(l *os.File) (<-chan string, <-chan error) {
@@ -65,9 +69,7 @@ func (g *Git) Stream(l *os.File) (<-chan string, <-chan error) {
 			}
 			return err
 		}()
-
 	}()
-
 	return lines, errc
 }
 
@@ -82,7 +84,6 @@ func (g *Git) Reader(lines <-chan string, errc <-chan error) {
 			}
 		}
 	}()
-
 }
 
 func (g *Git) Streamer() error {
