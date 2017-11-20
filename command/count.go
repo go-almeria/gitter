@@ -3,6 +3,7 @@ package command
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -34,6 +35,11 @@ func (c *CountCommand) Run(args []string) int {
 	}
 
 	g := *api.NewGit("shortlog HEAD -n -s")
+	if !g.IsRepo() {
+		c.Ui.Error("Not a git repository (or any of the parent directories): .git")
+		return 1
+	}
+
 	if err := g.Run(); err != nil {
 		c.Ui.Error(fmt.Sprintf("%s", string(g.Err.Bytes())))
 		return 1
@@ -54,9 +60,8 @@ func (c *CountCommand) Run(args []string) int {
 	}
 
 	if err := scanner.Err(); err != nil {
-		c.Ui.Error(fmt.Sprintf("%v", err))
+		log.Fatal("--->", err)
 	}
-
 	c.Ui.Info(fmt.Sprintf("\ntotal %d", count))
 
 	return 0
