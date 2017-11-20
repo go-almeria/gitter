@@ -20,7 +20,7 @@ type Git struct {
 	Cmd       *exec.Cmd
 	Path      string
 	Env       []string
-	Args      []string
+	Args      string
 	Pid       int
 	Duration  int
 	Errors    []string
@@ -32,9 +32,8 @@ type Git struct {
 	ErrPipe   io.ReadCloser
 }
 
-func NewGit(a string) *Git {
-	args := strings.Fields(a)
-	return &Git{GitExec: gitExec, Args: args, Cmd: exec.Command(gitExec, args...)}
+func NewGit(args string) *Git {
+	return &Git{GitExec: gitExec, Args: args, Cmd: exec.Command(gitExec, strings.Fields(args)...)}
 }
 
 func (g *Git) IsRepo() bool {
