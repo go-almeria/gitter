@@ -3,7 +3,6 @@ package command
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -60,8 +59,9 @@ func (c *CountCommand) Run(args []string) int {
 	}
 
 	if err := scanner.Err(); err != nil {
-		log.Fatal("--->", err)
+		c.Ui.Error(err.Error())
 	}
+
 	c.Ui.Info(fmt.Sprintf("\ntotal %d", count))
 
 	return 0
