@@ -21,7 +21,6 @@ type Git struct {
 	Path      string
 	Env       []string
 	Args      []string
-	Success   bool
 	Pid       int
 	Duration  int
 	Errors    []string
@@ -35,7 +34,14 @@ type Git struct {
 
 func NewGit(a string) *Git {
 	args := strings.Fields(a)
-	return &Git{GitExec: gitExec, Args: args, Cmd: exec.Command("git", args...)}
+	return &Git{GitExec: gitExec, Args: args, Cmd: exec.Command(gitExec, args...)}
+}
+
+func (g *Git) IsRepo() bool {
+	if err := exec.Command(g.GitExec, "rev-parse", "--git-dir").Run(); err != nil {
+		return false
+	}
+	return true
 }
 
 func (g *Git) Stream(l *os.File) (<-chan string, <-chan error) {
